@@ -199,8 +199,19 @@ var tetris = {
      * @return void
      */
     moveRight: function() {
-        if ((this.currentBlockPos[1] + this.currentBlock[0].length) >= 10) {
+        var y = this.currentBlockPos[0];
+        var x = this.currentBlockPos[1];
+        var height = this.currentBlock.length;
+        var width = this.currentBlock[0].length;
+
+        if ((x + width) >= 10) {
             return;
+        }
+
+        for (i = 0; i < height; i++) {
+            if (this.currentBlock[i][width - 1] == 1 && this.map[y + i][x + width] == 1) {
+                return;
+            }
         }
 
         this.currentBlockPos[1]++;
@@ -212,8 +223,21 @@ var tetris = {
      * @return void
      */
     moveLeft: function() {
-        if ((this.currentBlockPos[1]) <= 0) {
+        var y = this.currentBlockPos[0];
+        var x = this.currentBlockPos[1];
+        var height = this.currentBlock.length;
+        var width = this.currentBlock[0].length;
+
+        if (x <= 0) {
             return;
+        }
+
+        // THIS IS NOT WORKING PROPERLY
+        // TODO: fix
+        for (i = 0; i < height; i++) {
+            if (this.currentBlock[i][0] == 1 && this.map[y + i][x - 1] == 1) {
+                return;
+            }
         }
 
         this.currentBlockPos[1]--;
