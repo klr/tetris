@@ -85,6 +85,8 @@ var tetris = {
                 tetris.moveLeft();
             } else if (event.keyCode == 39) {
                 tetris.moveRight();
+            } else if(event.keyCode == 38) {
+                tetris.rotate();
             }
         }
 
@@ -106,6 +108,7 @@ var tetris = {
             if (tetris.checkCollision()) {
                 tetris.checkFullLine();
 
+                //clearInterval(tetris.interval);
                 tetris.currentBlockPos = [0, 0];
                 tetris.currentBlock = tetris.getBlock();
             } else {
@@ -122,9 +125,6 @@ var tetris = {
      */
     getBlock: function() {
         var block = Math.floor(Math.random() * 6);
-
-        console.log(block);
-
         return this.blocks[block];
     },
 
@@ -221,6 +221,38 @@ var tetris = {
     },
 
     /**
+     * Rotate
+     * @return void
+     */
+    rotate: function() {
+        var currentBlock = this.currentBlock;
+        var height = currentBlock[0].length;
+        var width = currentBlock.length;
+        var newBlock = [];
+
+        for (i = 0; i < height; i++) {
+            newBlock[i] = [];
+
+            for (c = 0; c < width; c++) {
+                newBlock[i][c] = 0;
+            }
+        }
+
+        for (i = 0; i < currentBlock.length; i++) {
+            for (c = 0; c < currentBlock[i].length; c++) {
+                newBlock[c][Math.abs(i - width)] = currentBlock[i][c];
+            }
+        }
+
+        for (i = 0; i < newBlock.length; i++) {
+            newBlock[i].shift();
+        }
+
+        this.currentBlock = newBlock;
+        this.draw();
+    },
+
+    /**
      * Check collision
      * @return void
      */
@@ -274,28 +306,11 @@ var tetris = {
             }
 
             if (full) {
-                alert("FULL LINE");
+                this.map.splice(i);
+                this.map.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
             }
         }
     }
 };
 
 tetris.start();
-
-/*
-var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
-
-function draw(){
-    var ctx = document.getElementById('canvas').getContext('2d');
-    ctx.fillRect(0, 0, 30, 30);
-}
-
-draw();
-/*
-function draw(){
-  var ctx = document.getElementById('canvas').getContext('2d');
-  ctx.fillRect(25,25,100,100);
-  ctx.clearRect(45,45,60,60);
-  ctx.strokeRect(50,50,50,50);
-}*/
