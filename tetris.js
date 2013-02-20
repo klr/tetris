@@ -43,34 +43,49 @@ var tetris = {
         ],
         [
             // T
-            [1, 1, 1],
-            [0, 1, 0]
+            [2, 2, 2],
+            [0, 2, 0]
         ],
         [
             // J
-            [1, 1, 1],
-            [0, 0, 1]
+            [3, 3, 3],
+            [0, 0, 3]
         ],
         [
             // L
-            [1, 1, 1],
-            [1, 0, 0]
+            [4, 4, 4],
+            [4, 0, 0]
         ],
         [
             // Z
-            [1, 1, 0],
-            [0, 1, 1]
+            [5, 5, 0],
+            [0, 5, 5]
         ],
         [
             // S
-            [0, 1, 1],
-            [1, 1, 0]
+            [0, 6, 6],
+            [6, 6, 0]
         ],
         [
             // O
-            [1, 1],
-            [1, 1]
+            [7, 7],
+            [7, 7]
         ]
+    ],
+
+    /**
+     * Colours
+     * @type array
+     */
+    colours: [
+        "",
+        "blue",
+        "green",
+        "yellow",
+        "lightblue",
+        "red",
+        "purple",
+        "orange"
     ],
 
     /**
@@ -94,7 +109,7 @@ var tetris = {
         this.map = this.createMap();
         this.currentBlock = this.getBlock();
         this.draw();
-        this.createInterval(500);
+        this.createInterval(250);
     },
 
     /**
@@ -165,7 +180,7 @@ var tetris = {
         // Add current block to map
         for (i = 0; i < this.currentBlock.length; i++) {
             for (c = 0; c < this.currentBlock[i].length; c++) {
-                if (this.currentBlock[i][c] == 1) {
+                if (this.currentBlock[i][c] !== 0) {
                     map[i + this.currentBlockPos[0]][c + this.currentBlockPos[1]] = this.currentBlock[i][c];
                 }
             }
@@ -186,9 +201,12 @@ var tetris = {
         // Draw
         for (i = 0; i < map.length; i++) {
             for (c = 0; c < map[i].length; c++) {
-                if (map[i][c] == 1) {
-                    this.ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+                if (map[i][c] !== 0) {
+                    this.ctx.fillStyle = this.colours[map[i][c]];
                     this.ctx.fillRect(c * 30, i * 30, 30, 30);
+
+                    this.ctx.strokeStyle = "black";
+                    this.ctx.strokeRect(c * 30, i * 30, 30, 30);
                 }
             }
         }
@@ -209,7 +227,7 @@ var tetris = {
         }
 
         for (i = 0; i < height; i++) {
-            if (this.currentBlock[i][width - 1] == 1 && this.map[y + i][x + width] == 1) {
+            if (this.currentBlock[i][width - 1] !== 0 && this.map[y + i][x + width] !== 0) {
                 return;
             }
         }
@@ -235,7 +253,7 @@ var tetris = {
         // THIS IS NOT WORKING PROPERLY
         // TODO: fix
         for (i = 0; i < height; i++) {
-            if (this.currentBlock[i][0] == 1 && this.map[y + i][x - 1] == 1) {
+            if (this.currentBlock[i][0] !== 0 && this.map[y + i][x - 1] !== 0) {
                 return;
             }
         }
@@ -288,11 +306,11 @@ var tetris = {
                 if (i + this.currentBlockPos[0] >= 15) {
                     collided = true;
                     break;
-                } else if(this.currentBlock[i][c] == 1) {
+                } else if(this.currentBlock[i][c] !== 0) {
                     var x = this.currentBlockPos[1] + c;
                     var y = this.currentBlockPos[0] + i + 1;
 
-                    if (typeof this.map[y] !== "undefined" && this.map[y][x] == 1) {
+                    if (typeof this.map[y] !== "undefined" && this.map[y][x] !== 0) {
                         collided = true;
                         break;
                     }
@@ -304,7 +322,7 @@ var tetris = {
         if (collided) {
             for (i = 0; i < this.currentBlock.length; i++) {
                 for (c = 0; c < this.currentBlock[i].length; c++) {
-                    if (this.currentBlock[i][c] == 1) {
+                    if (this.currentBlock[i][c] !== 0) {
                         this.map[i + this.currentBlockPos[0]][c + this.currentBlockPos[1]] = this.currentBlock[i][c];
                     }
                 }
@@ -331,8 +349,11 @@ var tetris = {
 
             if (full) {
                 this.map.splice(i);
-                this.map.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
             }
+        }
+
+        while (this.map.length !== 16) {
+            this.map.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
         }
     }
 };
