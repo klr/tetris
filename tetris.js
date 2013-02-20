@@ -79,13 +79,13 @@ var tetris = {
      */
     colours: [
         "",
-        "blue",
-        "green",
-        "yellow",
-        "lightblue",
-        "red",
-        "purple",
-        "orange"
+        "rgba(38, 118, 217, 1)",
+        "rgba(40, 174, 22, 1)",
+        "rgba(244, 247, 18, 1)",
+        "rgba(113, 207, 251, 1)",
+        "rgba(240, 82, 82, 1)",
+        "rgba(174, 50, 220, 1)",
+        "rgba(243, 157, 33, 1)"
     ],
 
     /**
@@ -139,7 +139,7 @@ var tetris = {
      * @return void
      */
     getBlock: function() {
-        var block = Math.floor(Math.random() * 6);
+        var block = Math.floor(Math.random() * 7);
         return this.blocks[block];
     },
 

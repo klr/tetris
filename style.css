@@ -1,0 +1,11 @@
+#game {
+    width: 300px;
+    height: 480px;
+    border: 2px solid #666;
+    margin: auto;
+
+    background-image: -webkit-linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee),
+    -webkit-linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee);
+    background-size:60px 60px;
+    background-position:0 0, 30px 30px
+}
