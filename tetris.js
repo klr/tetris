@@ -95,6 +95,12 @@ var tetris = {
     score: 0,
 
     /**
+     * Speed
+     * @type integer
+     */
+    speed: 500,
+
+    /**
      * On score change
      * @type closure
      */
@@ -123,7 +129,7 @@ var tetris = {
         this.map = this.createMap();
         this.currentBlock = this.getBlock();
         this.draw();
-        this.createInterval(250);
+        this.createInterval();
     },
 
     /**
@@ -136,13 +142,16 @@ var tetris = {
         if (this.onscorechange !== null) {
             this.onscorechange(this.score);
         }
+
+        this.speed = this.speed - 2;
+        this.createInterval();
     },
 
     /**
      * Create interval
      * @return void
      */
-    createInterval: function(speed) {
+    createInterval: function() {
         clearInterval(this.interval);
 
         this.interval = setInterval(function() {
@@ -157,7 +166,7 @@ var tetris = {
             }
 
             tetris.draw();
-        }, speed);
+        }, this.speed);
     },
 
     /**
