@@ -234,8 +234,8 @@ var tetris = {
         map = this.getMap();
 
         // Draw
-        for (i = 0; i < map.length; i++) {
-            for (c = 0; c < map[i].length; c++) {
+        for (i = 0; i < 16; i++) {
+            for (c = 0; c < 10; c++) {
                 if (map[i][c] !== 0) {
                     this.ctx.fillStyle = this.colours[map[i][c]];
                     this.ctx.fillRect(c * 30, i * 30, 30, 30);
