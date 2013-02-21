@@ -89,6 +89,12 @@ var tetris = {
     ],
 
     /**
+     * Score
+     * @type integer
+     */
+    score: 0,
+
+    /**
      * Start
      * @return void
      */
@@ -320,6 +326,8 @@ var tetris = {
 
         // If the block has collided, add it to the map
         if (collided) {
+            this.score = this.score + 1;
+
             for (i = 0; i < this.currentBlock.length; i++) {
                 for (c = 0; c < this.currentBlock[i].length; c++) {
                     if (this.currentBlock[i][c] !== 0) {
@@ -337,6 +345,8 @@ var tetris = {
      * @return bool
      */
     checkFullLine: function() {
+        var combo = 0;
+
         for (i = 0; i < this.map.length; i++) {
             var full = true;
 
@@ -348,12 +358,29 @@ var tetris = {
             }
 
             if (full) {
-                this.map.splice(i);
-            }
-        }
+                this.map.splice(i, 1);
+                this.map.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
 
-        while (this.map.length !== 16) {
-            this.map.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+                switch (combo) {
+                    case 0:
+                        this.score = this.score + 10;
+                        break;
+
+                    case 1:
+                        this.score = this.score + 12;
+                        break;
+
+                    case 2:
+                        this.score = this.score + 15;
+                        break;
+
+                    case 3:
+                        this.score = this.score + 20;
+                        break;
+                }
+
+                combo++;
+            }
         }
     }
 };
