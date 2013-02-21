@@ -95,6 +95,12 @@ var tetris = {
     score: 0,
 
     /**
+     * On score change
+     * @type closure
+     */
+    onscorechange: null,
+
+    /**
      * Start
      * @return void
      */
@@ -108,6 +114,8 @@ var tetris = {
                 tetris.moveRight();
             } else if(event.keyCode == 38) {
                 tetris.rotate();
+            } else if(event.keyCode == 40) {
+                tetris.drop();
             }
         }
 
@@ -116,6 +124,18 @@ var tetris = {
         this.currentBlock = this.getBlock();
         this.draw();
         this.createInterval(250);
+    },
+
+    /**
+     * Score
+     * @param integer score
+     */
+    addScore: function(score) {
+        this.score = this.score + score;
+
+        if (this.onscorechange !== null) {
+            this.onscorechange(this.score);
+        }
     },
 
     /**
@@ -301,6 +321,21 @@ var tetris = {
     },
 
     /**
+     * Drop
+     * @return void
+     */
+    drop: function() {
+        while (this.currentBlockPos[0] !== 15) {
+            if (this.checkCollision()) {
+                return;
+            }
+
+            this.currentBlockPos[0]++;
+            this.draw();
+        }
+    },
+
+    /**
      * Check collision
      * @return void
      */
@@ -326,8 +361,6 @@ var tetris = {
 
         // If the block has collided, add it to the map
         if (collided) {
-            this.score = this.score + 1;
-
             for (i = 0; i < this.currentBlock.length; i++) {
                 for (c = 0; c < this.currentBlock[i].length; c++) {
                     if (this.currentBlock[i][c] !== 0) {
@@ -363,19 +396,19 @@ var tetris = {
 
                 switch (combo) {
                     case 0:
-                        this.score = this.score + 10;
+                        this.addScore(10);
                         break;
 
                     case 1:
-                        this.score = this.score + 12;
+                        this.addScore(12);
                         break;
 
                     case 2:
-                        this.score = this.score + 15;
+                        this.addScore(15);
                         break;
 
                     case 3:
-                        this.score = this.score + 20;
+                        this.addScore(20);
                         break;
                 }
 

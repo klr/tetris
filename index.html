@@ -6,11 +6,19 @@
 </head>
 <body>
 
+    <span id="score">0</span>
+
     <div id="game">
         <canvas id="canvas" width="300" height="480"></canvas>
     </div>
 
     <script src="tetris.js" type="text/javascript"></script>
+    <script>
+    tetris.onscorechange = function(score) {
+        var span = document.getElementById("score");
+        span.innerHTML = score;
+    };
+    </script>
 
 </body>
 </html>
