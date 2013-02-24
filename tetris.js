@@ -141,6 +141,9 @@ var tetris = {
         this.currentBlock = this.getBlock();
         this.currentBlockPos = this.calculateInitialBlockPos(this.currentBlock);
 
+        // Trigger score event
+        this.addScore(0);
+
         // Draw
         this.draw();
         this.createInterval();
@@ -178,9 +181,16 @@ var tetris = {
      * @return void
      */
     tick: function() {
-        if (this.checkCollision()) {
-            console.log("collision");
+        try {
+            var collision = this.checkCollision();
+        } catch(err) {
+            alert("Game over");
 
+            this.start();
+            return;
+        }
+
+        if (collision) {
             this.checkFullLine();
 
             this.currentBlock = this.getBlock();
@@ -207,7 +217,7 @@ var tetris = {
      * @return array
      */
     calculateInitialBlockPos: function(block) {
-        return [0, Math.floor((this.width - block[0].length) / 2)];
+        return [(-block[0].length + 1), Math.floor((this.width - block[0].length) / 2)];
     },
 
     /**
@@ -247,7 +257,7 @@ var tetris = {
         // Add current block to map
         for (i = 0; i < this.currentBlock.length; i++) {
             for (c = 0; c < this.currentBlock[i].length; c++) {
-                if (this.currentBlock[i][c] !== 0 && this.currentBlockPos[0] >= 0) {
+                if (this.currentBlock[i][c] !== 0 && (this.currentBlockPos[0] + i >= 0)) {
                     map[i + this.currentBlockPos[0]][c + this.currentBlockPos[1]] = this.currentBlock[i][c];
                 }
             }
@@ -396,7 +406,16 @@ var tetris = {
      */
     drop: function() {
         while (this.currentBlockPos[0] !== this.height - 1) {
-            if (this.checkCollision()) {
+            try {
+                var collision = this.checkCollision();
+            } catch(err) {
+                alert("Game over");
+
+                this.start();
+                return;
+            }
+
+            if (collision) {
                 this.tick();
 
                 return;
@@ -436,6 +455,10 @@ var tetris = {
             for (i = 0; i < this.currentBlock.length; i++) {
                 for (c = 0; c < this.currentBlock[i].length; c++) {
                     if (this.currentBlock[i][c] !== 0) {
+                        if (this.currentBlockPos[0] + i < 0) {
+                            throw "end";
+                        }
+
                         this.map[i + this.currentBlockPos[0]][c + this.currentBlockPos[1]] = this.currentBlock[i][c];
                     }
                 }
