@@ -155,18 +155,25 @@ var tetris = {
         clearInterval(this.interval);
 
         this.interval = setInterval(function() {
-            if (tetris.checkCollision()) {
-                tetris.checkFullLine();
-
-                //clearInterval(tetris.interval);
-                tetris.currentBlockPos = [0, 0];
-                tetris.currentBlock = tetris.getBlock();
-            } else {
-                tetris.currentBlockPos[0] = tetris.currentBlockPos[0] + 1;
-            }
-
-            tetris.draw();
+            tetris.tick();
         }, this.speed);
+    },
+
+    /**
+     * Tick
+     * @return void
+     */
+    tick: function() {
+        if (this.checkCollision()) {
+            this.checkFullLine();
+
+            this.currentBlockPos = [0, 0];
+            this.currentBlock = this.getBlock();
+        } else {
+            this.currentBlockPos[0] = this.currentBlockPos[0] + 1;
+        }
+
+        this.draw();
     },
 
     /**
@@ -336,6 +343,8 @@ var tetris = {
     drop: function() {
         while (this.currentBlockPos[0] !== 15) {
             if (this.checkCollision()) {
+                this.tick();
+
                 return;
             }
 
