@@ -330,6 +330,21 @@ var tetris = {
     },
 
     /**
+     * Move down
+     * @return void
+     */
+    moveDown: function() {
+        if (this.currentBlockPos[0] !== this.height - 1) {
+            if (this.checkCollision()) {
+                return;
+            }
+
+            this.currentBlockPos[0]++;
+            this.draw();
+        }
+    },
+
+    /**
      * Rotate
      * @return void
      */
