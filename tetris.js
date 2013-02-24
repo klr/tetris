@@ -512,5 +512,3 @@ var tetris = {
         }
     }
 };
-
-tetris.start();
