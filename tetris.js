@@ -1,9 +1,27 @@
 var tetris = {
     /**
+     * The canvas
+     * @type object
+     */
+    canvas: null,
+
+    /**
      * The canvas context
      * @type object
      */
     ctx: null,
+
+    /**
+     * Height
+     * @type integer
+     */
+    height: 20,
+
+    /**
+     * Width
+     * @type integer
+     */
+    width: 10,
 
     /**
      * The map
@@ -111,9 +129,10 @@ var tetris = {
      * @return void
      */
     start: function() {
-        this.ctx = document.getElementById('canvas').getContext('2d');
+        this.canvas = document.getElementById('canvas');
+        this.ctx = this.canvas.getContext('2d');
 
-        // Reset score and speed
+        // Reset score and
         this.score = 0;
         this.speed = 500;
 
@@ -188,10 +207,7 @@ var tetris = {
      * @return array
      */
     calculateInitialBlockPos: function(block) {
-        var y = Math.floor((10 - block.length) / 2),
-            x = -block[0].length;
-
-        return [0, Math.floor((10 - block[0].length) / 2)];
+        return [0, Math.floor((this.width - block[0].length) / 2)];
     },
 
     /**
@@ -201,10 +217,10 @@ var tetris = {
     createMap: function() {
         var map = [];
 
-        for (i = 0; i < 16; i++) {
+        for (i = 0; i < this.height; i++) {
             map[i] = [];
 
-            for (c = 0; c < 10; c++) {
+            for (c = 0; c < this.width; c++) {
                 map[i][c] = 0;
             }
         }
@@ -245,19 +261,19 @@ var tetris = {
      * @return void
      */
     draw: function() {
-        tetris.ctx.clearRect(0, 0, 300 , 480);
+        tetris.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         map = this.getMap();
 
         // Draw
-        for (i = 0; i < 16; i++) {
-            for (c = 0; c < 10; c++) {
+        for (i = 0; i < this.height; i++) {
+            for (c = 0; c < this.width; c++) {
                 if (map[i][c] !== 0) {
                     this.ctx.fillStyle = this.colours[map[i][c]];
                     this.ctx.fillRect(c * 30, i * 30, 30, 30);
 
-                    this.ctx.strokeStyle = "black";
-                    this.ctx.strokeRect(c * 30, i * 30, 30, 30);
+                    this.ctx.strokeStyle = "rgba(0, 0, 0, .3)";
+                    this.ctx.strokeRect((c * 30) + 1, (i * 30) + 1, 28, 28);
                 }
             }
         }
@@ -273,7 +289,7 @@ var tetris = {
         var height = this.currentBlock.length;
         var width = this.currentBlock[0].length;
 
-        if ((x + width) >= 10) {
+        if ((x + width) >= this.width) {
             return;
         }
 
@@ -340,12 +356,12 @@ var tetris = {
         for (i = 0; i < newBlock.length; i++) {
             newBlock[i].shift();
 
-            if ((i + this.currentBlockPos[0] + 1) > 16) {
+            if ((i + this.currentBlockPos[0] + 1) > this.height) {
                 return;
             }
 
             for (c = 0; c < newBlock[i].length; c++) {
-                if ((c + this.currentBlockPos[1] + 1) > 10) {
+                if ((c + this.currentBlockPos[1] + 1) > this.width) {
                     return;
                 }
 
@@ -364,7 +380,7 @@ var tetris = {
      * @return void
      */
     drop: function() {
-        while (this.currentBlockPos[0] !== 15) {
+        while (this.currentBlockPos[0] !== this.height - 1) {
             if (this.checkCollision()) {
                 this.tick();
 
@@ -385,7 +401,7 @@ var tetris = {
 
         for (i = 0; i < this.currentBlock.length; i++) {
             for (c = 0; c < this.currentBlock[i].length; c++) {
-                if (i + this.currentBlockPos[0] >= 15) {
+                if (i + this.currentBlockPos[0] >= this.height - 1) {
                     collided = true;
                     break;
                 } else if(this.currentBlock[i][c] !== 0) {
