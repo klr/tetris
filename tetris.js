@@ -330,6 +330,20 @@ var tetris = {
 
         for (i = 0; i < newBlock.length; i++) {
             newBlock[i].shift();
+
+            if ((i + this.currentBlockPos[0] + 1) > 16) {
+                return;
+            }
+
+            for (c = 0; c < newBlock[i].length; c++) {
+                if ((c + this.currentBlockPos[1] + 1) > 10) {
+                    return;
+                }
+
+                if (this.map[i + this.currentBlockPos[0]][c + this.currentBlockPos[1]] !== 0) {
+                    return;
+                }
+            }
         }
 
         this.currentBlock = newBlock;
